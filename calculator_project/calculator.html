@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="calculator.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <img src="logo.png" alt="image not lading" width="50%" height="50%" />
+    <div class="container">
+      <input type="text" id="result" readonly placeholder="satyam's calculator"/>
+      <div class="calculator">
+        <button
+          onclick="currentInput=''; document.querySelector('#result').value = currentInput;"
+        >
+          c
+        </button>
+        <button
+          onclick="currentInput=currentInput+'1'; document.querySelector('#result').value = currentInput;"
+        >
+          1
+        </button>
+        <button
+          onclick="currentInput=currentInput+'2'; document.querySelector('#result').value = currentInput;"
+        >
+          2
+        </button>
+        
+        <button
+          onclick="currentInput=currentInput+'3'; document.querySelector('#result').value = currentInput;"
+        >
+          3
+        </button>
+        <button
+          onclick="currentInput=currentInput+'+'; document.querySelector('#result').value = currentInput;"
+        >
+          +
+        </button>
+        <button
+          onclick="currentInput=currentInput+'4'; document.querySelector('#result').value = currentInput;"
+        >
+          4
+        </button>
+        
+        <button
+          onclick="currentInput=currentInput+'5'; document.querySelector('#result').value = currentInput;"
+        >
+          5
+        </button>
+        <button
+          onclick="currentInput=currentInput+'6'; document.querySelector('#result').value = currentInput;"
+        >
+          6
+        </button>
+        <button
+          onclick="currentInput=currentInput+'-'; document.querySelector('#result').value = currentInput;"
+        >
+          -
+        </button>
+        
+        <button
+          onclick="currentInput=currentInput+'7'; document.querySelector('#result').value = currentInput;"
+        >
+          7
+        </button>
+        <button
+          onclick="currentInput=currentInput+'8'; document.querySelector('#result').value = currentInput;"
+        >
+          8
+        </button>
+        
+        <button
+          onclick="currentInput=currentInput+'9'; document.querySelector('#result').value = currentInput;"
+        >
+          9
+        </button>
+        <button
+          onclick="currentInput=currentInput+'*'; document.querySelector('#result').value = currentInput;"
+        >
+          *
+        </button>
+       
+        <button
+          onclick="currentInput=currentInput+'0'; document.querySelector('#result').value = currentInput;"
+        >
+          0
+        </button>
+          <button
+          onclick="currentInput=currentInput+'.'; document.querySelector('#result').value = currentInput;"
+        >
+          .
+        </button>
+        <button class="satyam" onclick="backspace()">⌫</button>
+      
+         <button
+          onclick="currentInput=currentInput+'/'; document.querySelector('#result').value = currentInput;"
+        >
+          /
+        </button>
+        <button onclick="currentInput+='('; document.querySelector('#result').value = currentInput;"> ( </button>
+        <button onclick="currentInput+=')'; document.querySelector('#result').value = currentInput;"> ) </button>
+        
+
+        <button onclick="applyFunction('sqrt')">√</button>
+        <button onclick="applyFunction('sin')">sin</button>
+        <button onclick="applyFunction('cos')">cos</button>
+        <button onclick="applyFunction('tan')">tan</button>
+        <button onclick="applyFunction('log')">log</button>
+        <button onclick="applyFunction('exp')">exp</button>
+        <button onclick="applyFunction('square')">x²</button>
+        <button onclick="applyFunction('cube')">x³</button>
+        <button class="satyam" onclick="calculate()">=</button>
+      </div>
+    </div>
+    <script>
+      let currentInput = "";
+      document.querySelector("#result").value = currentInput;
+      function backspace() {
+        currentInput = currentInput.slice(0, -1);
+        document.querySelector("#result").value = currentInput;
+      }
+     function applyFunction(val) {
+  if (val === "square") {
+    currentInput += "^2";
+  } else if (val === "cube") {
+    currentInput += "^3";
+  }  else if (val === "exp") {
+    currentInput += "exp(";   // exponential
+  }  else {
+    currentInput += val + "()";   // add () instead of just (
+  }
+  document.querySelector("#result").value = currentInput;
+
+  // place cursor before the closing )
+  if (val !== "square" && val !== "cube") {
+    currentInput = currentInput.slice(0, -1); // move "inside" ()
+    document.querySelector("#result").value = currentInput;
+  }
+}
+
+
+      function calculate() {
+        try {
+          let expression = currentInput;
+
+          // Replace custom functions with JS Math
+          expression = expression.replace(
+            /sin\(([^)]+)\)/g,
+            "Math.sin(($1)*Math.PI/180)"
+          );
+          expression = expression.replace(
+            /cos\(([^)]+)\)/g,
+            "Math.cos(($1)*Math.PI/180)"
+          );
+          expression = expression.replace(
+            /tan\(([^)]+)\)/g,
+            "Math.tan(($1)*Math.PI/180)"
+          );
+          expression = expression.replace(/sqrt\(([^)]+)\)/g, "Math.sqrt($1)");
+          expression = expression.replace(/log\(([^)]+)\)/g, "Math.log10($1)");
+          expression = expression.replace(/exp\(([^)]+)\)/g, "Math.exp($1)");
+
+
+          // Handle powers
+          expression = expression.replace(/(\d+)\^2/g, "Math.pow($1,2)");
+          expression = expression.replace(/(\d+)\^3/g, "Math.pow($1,3)");
+          expression = expression.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
+
+          currentInput = eval(expression).toString();
+          document.querySelector("#result").value = currentInput;
+        } catch {
+          document.querySelector("#result").value = "Error";
+          currentInput = "";
+        }
+      }
+    </script>
+  </body>
+</html>
